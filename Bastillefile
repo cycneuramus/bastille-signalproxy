@@ -1,0 +1,31 @@
+# Define args for passing to `bastille template` cmd
+ARG SIGNAL_PROXY_DOMAIN
+ARG REDIRECT_DOMAIN
+
+# Define convenience args for use in this file
+ARG L4_PLUGIN=github.com/mholt/caddy-l4
+ARG CADDY_CONFIG=/usr/local/etc/caddy/caddy.json
+
+# Install dependencies
+PKG go xcaddy
+
+# Build caddy with the l4 plugin
+CMD xcaddy build --output /usr/local/bin/caddy --with ${L4_PLUGIN}
+
+# Create directories and copy caddy rc.d script
+CMD mkdir -p /usr/local/etc/rc.d
+CP caddy /usr/local/etc/rc.d/caddy
+CMD chmod +x /usr/local/etc/rc.d/caddy
+
+# Render caddy configuration
+CP usr/local/etc/caddy /usr/local/etc/caddy
+RENDER ${CADDY_CONFIG}
+
+# Redirect port traffic from host into container
+RDR tcp 80 80
+RDR tcp 443 443
+
+# Enable and start Caddy
+SYSRC caddy_enable=YES
+SYSRC caddy_config=${CADDY_CONFIG}
+SERVICE caddy start
