@@ -57,7 +57,7 @@ In summary:
 ## Example usage
 
 ```sh
-bastille create signalproxy 14.1-RELEASE 10.0.0.10
+bastille create signalproxy 14.2-RELEASE 10.0.0.10
 
 bastille bootstrap https://github.com/cycneuramus/bastille-signalproxy
 bastille template signalproxy \
@@ -112,5 +112,5 @@ service pf start
 sysrc gateway_enable=YES
 
 # bootstrap a release for use with jails
-bastille bootstrap 14.1-RELEASE update
+bastille bootstrap 14.2-RELEASE update
 ```
